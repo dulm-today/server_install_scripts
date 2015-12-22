@@ -12,7 +12,7 @@ nginx_file="nginx-${nginx_version}.tar.gz"
 nginx_src="http://nginx.org/download/nginx-${nginx_version}.tar.gz"
 
 nginx_sbin="/usr/sbin/nginx"
-nginx_prefix="/home/nginx-${nginx_version}"
+nginx_prefix="/home/nginx"
 
 configure_install_path="--prefix=${nginx_prefix} 
 --sbin-path=/usr/sbin/nginx 
@@ -29,7 +29,7 @@ configure_install_module="--with-http_ssl_module
 --add-module=${curdir}/$echo_nginx_module_dir"
 
 configure_install_other="--user=nginx 
---group=nginx"
+--group=www"
 
 configure_install="$configure_install_path 
 $configure_install_module 
@@ -69,15 +69,15 @@ elif [ $isinstall -eq 2 ];then
 	configure_prev="nginx -V"
 fi
 
-groupadd -f -r nginx
-useradd -s /sbin/nologin -g nginx -r nginx
+groupadd -f -r www
+useradd -s /sbin/nologin -g www -r nginx
 
 if [ ! -d "$echo_nginx_module_dir" ];then
 	git clone "$echo_nginx_module_src"
 fi
 
 if [ ! -f "$(basename $nginx_src)" ];then
-	wget "$nginx_src"
+	wget --tries=10 --connect-timeout=60 "$nginx_src"
 fi
 
 if [ ! -d "$($(basename $nginx_src) | sed s/\.tar\.gz//g)" ];then
@@ -92,17 +92,24 @@ make -j$(cat /proc/cpuinfo | grep processor | wc -l)
 
 set +e
 if [ $isinstall -eq 1 ];then
+	set -e
 	make install
 elif [ $isinstall -eq 2 ];then
+	set -e
 	cp -f "$nginx_sbin" "${nginx_sbin}.bak"
 	cp ./objs/nginx "$nginx_sbin"
 fi
 
 cd "$curdir"
 
-if [ ! -f /etc/init.d/nginxd ];then
-	cp init.d.nginx /etc/init.d/nginxd
-	chmod u+x /etc/init.d/nginxd
+set +e
+if [ ! -f /etc/init.d/nginx ];then
+	cp init.d.nginx /etc/init.d/nginx
+	chmod u+x /etc/init.d/nginx
+fi
+
+if [ -f ./conf.nginx.conf ];then
+	cp -f ./conf.nginx.conf /etc/nginx/nginx.conf
 fi
 
 

@@ -7,7 +7,7 @@ mysql_file="$(basename "$mysql_url")"
 mysql_dir="$(echo $mysql_file | sed s/\.tar\.gz//g)"
 mysql_prefix="/usr/local/mysql"
 mysql_data="/home/mysql"
-mysql_conf="my.conf"
+mysql_conf="conf.my.conf"
 
 #mysql config
 root_passwd=""
@@ -22,9 +22,7 @@ cmake_args_make()
 -DDEFAULT_CHARSET=utf8 \
 -DWITH_EXTRA_CHARSETS=all \
 -DDEFAULT_COLLATION=utf8_general_ci \
--DWITH_DEBUG=0 \
--DDOWNLOAD_BOOST=1 \
--DWITH_BOOST=../my_boost"
+-DWITH_DEBUG=0"
 
 }
 
@@ -60,7 +58,7 @@ root_passwd="$1"
 rpm -e --nodeps $(rpm -qa | grep mysql)
 
 if [ ! -f "$mysql_file" ];then
-	wget "$mysql_url"
+	wget --tries=10 --connect-timeout=60 "$mysql_url"
 fi
 
 if [ ! -d "$mysql_dir" ];then
@@ -101,12 +99,7 @@ set -e
 /sbin/service mysqld start
 
 sql_cmd_make
-$mysql_prefix/bin/mysql -uroot -e "$SQLCMD"
+$mysql_prefix/bin/mysql -h 127.0.0.1 -uroot -e "$SQLCMD"
 # mysql -h 127.0.0.1 -uroot -p
-
-
-
-
-
 
 

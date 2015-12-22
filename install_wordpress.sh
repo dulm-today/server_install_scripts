@@ -31,16 +31,20 @@ mysql_root_passwd="$1"
 www_passwd="$2"
 
 if [ ! -f "$wp_file" ];then
-	wget "$wp_url"
+	wget --tries=10 --connect-timeout=60 "$wp_url"
 fi
 
-if [ ! -d "wordpress" ];then
+if [ ! -d "wordpress" ] && [ ! -d "blog" ];then
 	tar -zxf "$wp_file"
 fi
 
 set -e
 mkdir -p "$www_dir"
+
 sqlcmd_make
-$mysql_prefix/bin/mysql -u root --password="$mysql_root_passwd" -e "$SQLCMD"
-cp -af ./wordpress/* $www_dir/
+$mysql_prefix/bin/mysql -h 127.0.0.1 -u root --password="$mysql_root_passwd" -e "$SQLCMD"
+cp -af ./wordpress $www_dir/blog
+
+chown -R php "$www_dir"
+chgrp -R www "$www_dir"
 

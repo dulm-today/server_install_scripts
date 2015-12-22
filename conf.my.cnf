@@ -17,6 +17,9 @@
 # These are commonly set, remove the # and set as required.
 basedir=/usr/local/mysql
 datadir=/home/mysql
+
+#skip-networking
+bind-address=127.0.0.1
 # port =
 #server_id=
 # socket = .....
