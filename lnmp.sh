@@ -7,13 +7,14 @@ set -e
 
 if [ `whoami` != "root" ]
 then
-  echo "use this script need user root"
+  echo "run this script as root must!"
   exit 1
 fi
 
 . utility.sh
 
 # tool lib install
+tools.sh
 
 # nginx install
 
