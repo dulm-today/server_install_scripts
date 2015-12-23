@@ -66,7 +66,7 @@ done
 if [ $isinstall -eq 1 ];then
 	configure_prev="$configure_install"
 elif [ $isinstall -eq 2 ];then
-	configure_prev="nginx -V"
+	configure_prev="$configure_install"
 fi
 
 groupadd -f -r www
@@ -80,7 +80,7 @@ if [ ! -f "$(basename $nginx_src)" ];then
 	wget --tries=10 --connect-timeout=60 "$nginx_src"
 fi
 
-if [ ! -d "$($(basename $nginx_src) | sed s/\.tar\.gz//g)" ];then
+if [ ! -d "$(basename $nginx_src | sed s/\.tar\.gz//g)" ];then
 	tar -zxf "$(basename $nginx_src)"
 fi
 
@@ -98,6 +98,7 @@ elif [ $isinstall -eq 2 ];then
 	set -e
 	cp -f "$nginx_sbin" "${nginx_sbin}.bak"
 	cp ./objs/nginx "$nginx_sbin"
+	exit 0
 fi
 
 cd "$curdir"
