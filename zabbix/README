@@ -1,0 +1,18 @@
+# A shell script file to install zabbix and some pre-config file.
+# System CentOS 6.5
+# relay on LNMP
+
+usage:
+  git clone ...
+  su
+  chmod u+x install_zabbix.sh
+  ./install_zabbix.sh <password_of_db_root>  <password_of_zabbix>  <password_of_mysql_agent>
+  service zabbix_server start
+  service zabbix_agentd start
+  
+info:
+  add group zabbix
+  add user zabbix
+  create database zabbix
+  grant all on zabbix.* to zabbix_user@localhost by identified by <password_of_zabbix>
+  grant usage on *.* to zabbix_agent@localhost by identified  by <password_of_mysql_agent>
