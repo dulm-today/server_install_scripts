@@ -1,0 +1,11 @@
+[mysql]
+host     = localhost
+user     = zabbix_agent
+password = zabbix_agent
+#socket   = /tmp/mysqld.sock
+
+[mysqladmin]
+host     = localhost
+user     = zabbix_agent
+password = zabbix_agent
+#socket   = /tmp/mysqld.sock
