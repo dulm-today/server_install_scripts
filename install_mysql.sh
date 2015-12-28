@@ -7,7 +7,7 @@ mysql_file="$(basename "$mysql_url")"
 mysql_dir="$(echo $mysql_file | sed s/\.tar\.gz//g)"
 mysql_prefix="/usr/local/mysql"
 mysql_data="/home/mysql"
-mysql_conf="conf.my.conf"
+mysql_conf="conf.my.cnf"
 
 #mysql config
 root_passwd=""

@@ -48,3 +48,5 @@ cp -af ./wordpress $www_dir/blog
 chown -R php "$www_dir"
 chgrp -R www "$www_dir"
 
+cp -f ./conf.nginx.blog.conf /etc/nginx/conf.d/blog.conf
+

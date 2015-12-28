@@ -104,6 +104,7 @@ fi
 cd "$curdir"
 
 set +e
+mkdir -p /etc/nginx/conf.d
 if [ ! -f /etc/init.d/nginx ];then
 	cp init.d.nginx /etc/init.d/nginx
 	chmod u+x /etc/init.d/nginx
